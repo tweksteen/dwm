@@ -21,9 +21,9 @@ LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} `pkg-config --libs xft p
 # flags
 CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
 #CFLAGS = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
-CFLAGS = ${RPM_OPT_FLAGS} -g -std=c99 -pedantic -Wall ${INCS} ${CPPFLAGS} -fPIE -pie -D_FORTIFY_SOURCE=2 -fstack-protector --param ssp-buffer-size=4
+CFLAGS = ${RPM_OPT_FLAGS} -g -std=c99 -pedantic -Wall ${INCS} ${CPPFLAGS} -fPIE -D_FORTIFY_SOURCE=2 -fstack-protector --param ssp-buffer-size=4
 #LDFLAGS = -g ${LIBS}
-LDFLAGS = ${LIBS} -z relro -pie -fPIE
+LDFLAGS = ${LIBS} -z relro -z now -pie
 
 # Solaris
 #CFLAGS = -fast ${INCS} -DVERSION=\"${VERSION}\"
