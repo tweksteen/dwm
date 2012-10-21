@@ -1,5 +1,5 @@
 # dwm version
-VERSION = 5.9
+VERSION = 6.0
 
 # Customize below to fit your system
 
@@ -15,15 +15,15 @@ XINERAMALIBS = -L${X11LIB} -lXinerama
 XINERAMAFLAGS = -DXINERAMA
 
 # includes and libs
-INCS = -I. -I/usr/include -I${X11INC} `pkg-config --cflags xft pango pangoxft`
-LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} `pkg-config --libs xft pango pangoxft`
+INCS = -I. -I/usr/include -I${X11INC} `pkg-config --cflags xft`
+LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} `pkg-config --libs xft`
 
 # flags
 CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
 #CFLAGS = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
-CFLAGS = ${RPM_OPT_FLAGS} -g -std=c99 -pedantic -Wall ${INCS} ${CPPFLAGS} -fPIE -D_FORTIFY_SOURCE=2 -fstack-protector --param ssp-buffer-size=4
+CFLAGS = -O2 -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS} -fPIE -D_FORTIFY_SOURCE=2 -fstack-protector --param ssp-buffer-size=4
 #LDFLAGS = -g ${LIBS}
-LDFLAGS = ${LIBS} -z relro -z now -pie
+LDFLAGS = -s ${LIBS} -z relro -z now -pie
 
 # Solaris
 #CFLAGS = -fast ${INCS} -DVERSION=\"${VERSION}\"

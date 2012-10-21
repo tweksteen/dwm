@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const char font[]            = "Monospace 10";
+static const char font[]            = "DejaVu Sans Mono-10";
 static const char normbordercolor[] = "#333333";
 static const char normbgcolor[]     = "#222222";
 static const char normfgcolor[]     = "#888888";
@@ -24,6 +24,7 @@ static const Rule rules[] = {
 
 /* layout(s) */
 static const float mfact      = 0.60; /* factor of master area size [0.05..0.95] */
+static const int nmaster      = 1;    /* number of clients in master area */
 static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
 
 static const Layout layouts[] = {
@@ -62,10 +63,10 @@ static Key keys[] = {
 	{ MODKEY,               XK_p,      		 spawn,          {.v = dmenucmd } },
 	{ MODKEY,               XK_Return, 		 spawn,          {.v = termcmd } },
 	{ MODKEY,               XK_b,      		 togglebar,      {0} },
-	{ MODKEY,               XK_j,      		 focusstack,     {.i = +1 } },
-	{ MODKEY,               XK_k,      		 focusstack,     {.i = -1 } },
-	{ MODKEY,               XK_h,      		 setmfact,       {.f = -0.05} },
-	{ MODKEY,               XK_l,      		 setmfact,       {.f = +0.05} },
+	{ MODKEY,               XK_Down,      		 focusstack,     {.i = +1 } },
+	{ MODKEY,               XK_Up,      		 focusstack,     {.i = -1 } },
+	{ MODKEY,               XK_Left,      		 setmfact,       {.f = -0.05} },
+	{ MODKEY,               XK_Right,      		 setmfact,       {.f = +0.05} },
 	{ MODKEY,               XK_Tab,    		 zoom,      	 {0} },
 	{ MODKEY|ShiftMask,	XK_c,      		 killclient,     {0} },
   	{ 0,                    XF86XK_AudioLowerVolume, spawn,   	 {.v = snddec} },
