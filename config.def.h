@@ -14,7 +14,7 @@ static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = False;     /* False means bottom bar */
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "α", "β", "γ", "δ", "ε", "ζ" };
 
 static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
@@ -63,8 +63,8 @@ static Key keys[] = {
 	{ MODKEY,               XK_p,      		 spawn,          {.v = dmenucmd } },
 	{ MODKEY,               XK_Return, 		 spawn,          {.v = termcmd } },
 	{ MODKEY,               XK_b,      		 togglebar,      {0} },
-	{ MODKEY,               XK_Down,      		 focusstack,     {.i = +1 } },
-	{ MODKEY,               XK_Up,      		 focusstack,     {.i = -1 } },
+	{ MODKEY,               XK_w,      		 focusstack,     {.i = +1 } },
+	{ MODKEY,               XK_q,      		 focusstack,     {.i = -1 } },
 	{ MODKEY,               XK_Left,      		 setmfact,       {.f = -0.05} },
 	{ MODKEY,               XK_Right,      		 setmfact,       {.f = +0.05} },
 	{ MODKEY,               XK_Tab,    		 zoom,      	 {0} },
@@ -94,9 +94,6 @@ static Key keys[] = {
 	TAGKEYS(                XK_4,                      3)
 	TAGKEYS(                XK_5,                      4)
 	TAGKEYS(                XK_6,                      5)
-	TAGKEYS(                XK_7,                      6)
-	TAGKEYS(                XK_8,                      7)
-	TAGKEYS(                XK_9,                      8)
 	{ MODKEY|ShiftMask,     XK_q,      		 quit,           {0} },
 };	
 
