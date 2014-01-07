@@ -1,13 +1,20 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const char font[]            = "DejaVu Sans Mono-10";
-static const char normbordercolor[] = "#333333";
-static const char normbgcolor[]     = "#222222";
-static const char normfgcolor[]     = "#888888";
-static const char selbordercolor[]  = "#4C7899";
-static const char selbgcolor[]      = "#285577";
-static const char selfgcolor[]      = "#ffffff";
+static const char font[]            = "Dejavu Sans Mono:medium:size=10.5";
+#define NUMCOLORS 9 
+static const char colors[NUMCOLORS][ColLast][9] = {
+// border foreground background
+{ "#212121", "#696969", "#121212" }, // 0 = normal
+{ "#696969", "#E0E0E0", "#121212" }, // 1 = selected
+{ "#212121", "#CF4F88", "#121212" }, // 2 = red
+{ "#212121", "#53A6A6", "#121212" }, // 3 = green
+{ "#212121", "#914E89", "#121212" }, // 4 = yellow
+{ "#212121", "#4779B3", "#121212" }, // 5 = blue
+{ "#212121", "#47959E", "#121212" }, // 6 = cyan
+{ "#212121", "#7E62B3", "#121212" }, // 7 = magenta
+{ "#212121", "#899CA1", "#121212" }, // 8 = grey
+};
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const Bool showbar           = True;     /* False means no bar */
@@ -16,10 +23,11 @@ static const Bool topbar            = False;     /* False means bottom bar */
 /* tagging */
 static const char *tags[] = { "α", "β", "γ", "δ", "ε", "ζ" };
 
-static const Rule rules[] = {
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            True,        -1 },
-	/*{ "Firefox",  NULL,       NULL,       1 << 8,       False,       -1 },*/
+static const Rule rules[] =  {
+  { NULL,       NULL,       NULL,       0,            False,       -1 },
+	//  class      instance    title       tags mask     isfloating   monitor 
+	// { "Gimp",     NULL,       NULL,       0,            True,        -1 },
+	// { "Firefox",  NULL,       NULL,       1 << 8,       False,       -1 },
 };
 
 /* layout(s) */
@@ -46,7 +54,7 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *dmenucmd[] = { "dmenu_run", "-fn", "Monospace-10", "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, "-b", NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-fn", "Monospace-10", "-nb", colors[0][ColBG], "-nf", colors[0][ColFG], "-sb", colors[1][ColBG], "-sf", colors[1][ColFG], "-b", NULL };
 static const char *termcmd[]  = { "xterm", NULL };
 static const char *firefoxcmd[] = { "firefox", NULL};
 static const char *thunderbirdcmd[] = { "thunderbird", NULL};
@@ -55,39 +63,43 @@ static const char *chromiumcmd[] = { "google-chrome", NULL};
 static const char *sndinc[] = { "amixer", "-q", "set", "Master", "5+", "unmute", NULL};
 static const char *snddec[] = { "amixer", "-q", "set", "Master", "5-", "unmute", NULL};
 static const char *sndmute[] = { "amixer", "-q", "set", "Master", "toggle", NULL};
+static const char *backlightinc[] = { "xbacklight", "-inc", "10"};
+static const char *backlightdec[] = { "xbacklight", "-dec", "10"};
 static const char *lock[] = { "slock", NULL};
 
 
 static Key keys[] = {
-	/* modifier             key 		         function        argument */
-	{ MODKEY,               XK_p,      		 spawn,          {.v = dmenucmd } },
-	{ MODKEY,               XK_Return, 		 spawn,          {.v = termcmd } },
-	{ MODKEY,               XK_b,      		 togglebar,      {0} },
-	{ MODKEY,               XK_w,      		 focusstack,     {.i = +1 } },
-	{ MODKEY,               XK_q,      		 focusstack,     {.i = -1 } },
-	{ MODKEY,               XK_Left,      		 setmfact,       {.f = -0.05} },
-	{ MODKEY,               XK_Right,      		 setmfact,       {.f = +0.05} },
-	{ MODKEY,               XK_Tab,    		 zoom,      	 {0} },
-	{ MODKEY|ShiftMask,	XK_c,      		 killclient,     {0} },
-  	{ 0,                    XF86XK_AudioLowerVolume, spawn,   	 {.v = snddec} },
-	{ 0,                    XF86XK_AudioRaiseVolume, spawn,   	 {.v = sndinc} },
-	{ 0,                    XF86XK_AudioMute,        spawn,   	 {.v = sndmute} },
-	{ MODKEY,               XK_c,      		 spawn,          {.v = chromiumcmd} },
-	{ MODKEY,               XK_t,      		 spawn,          {.v = thunderbirdcmd} },
-	{ MODKEY,               XK_v,      		 spawn,          {.v = virtmanagercmd} },
-	{ MODKEY,               XK_f,      		 spawn,          {.v = firefoxcmd} },
-	{ MODKEY,               XK_BackSpace,  	         spawn,          {.v = lock} },
-	{ MODKEY,               XK_bracketleft,          setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,               XK_bracketright,  	 setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,               XK_backslash,     	 setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,               XK_space,  		 setlayout,      {0} },
-	{ MODKEY|ShiftMask,     XK_space,  		 togglefloating, {0} },
-	{ MODKEY,               XK_0,      		 view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,     XK_0,      		 tag,            {.ui = ~0 } },
-	{ MODKEY,               XK_comma,  		 focusmon,       {.i = -1 } },
-	{ MODKEY,               XK_period, 		 focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,     XK_comma,  		 tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,     XK_period, 		 tagmon,         {.i = +1 } },
+	/* modifier             key                  function        argument */
+	{ MODKEY,               XK_p,                    spawn,          {.v = dmenucmd } },
+	{ MODKEY,               XK_Return,               spawn,          {.v = termcmd } },
+	{ MODKEY,               XK_b,                    togglebar,      {0} },
+	{ MODKEY,               XK_w,                    focusstack,     {.i = +1 } },
+	{ MODKEY,               XK_q,                    focusstack,     {.i = -1 } },
+	{ MODKEY,               XK_Left,                 setmfact,       {.f = -0.05} },
+	{ MODKEY,               XK_Right,                setmfact,       {.f = +0.05} },
+	{ MODKEY,               XK_Tab,                  zoom,      	   {0} },
+	{ MODKEY|ShiftMask,	    XK_c,                    killclient,     {0} },
+  { 0,                    XF86XK_MonBrightnessDown, spawn,   	     {.v = backlightdec} },
+	{ 0,                    XF86XK_MonBrightnessUp,  spawn,   	     {.v = backlightinc} },
+  { 0,                    XF86XK_AudioLowerVolume, spawn,   	     {.v = snddec} },
+	{ 0,                    XF86XK_AudioRaiseVolume, spawn,   	     {.v = sndinc} },
+	{ 0,                    XF86XK_AudioMute,        spawn,   	     {.v = sndmute} },
+	{ MODKEY,               XK_c,                    spawn,          {.v = chromiumcmd} },
+	{ MODKEY,               XK_t,                    spawn,          {.v = thunderbirdcmd} },
+	{ MODKEY,               XK_v,                    spawn,          {.v = virtmanagercmd} },
+	{ MODKEY,               XK_f,                    spawn,          {.v = firefoxcmd} },
+	{ MODKEY,               XK_BackSpace,            spawn,          {.v = lock} },
+	{ MODKEY,               XK_a,                    setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,               XK_s,                    setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,               XK_d,                    setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,               XK_space,                setlayout,      {0} },
+	{ MODKEY|ShiftMask,     XK_space,                togglefloating, {0} },
+	{ MODKEY,               XK_0,                    view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,     XK_0,                    tag,            {.ui = ~0 } },
+	{ MODKEY,               XK_z,                focusmon,       {.i = -1 } },
+	{ MODKEY,               XK_x,               focusmon,       {.i = +1 } },
+	{ MODKEY|ShiftMask,     XK_z,                tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,     XK_x,               tagmon,         {.i = +1 } },
 	TAGKEYS(                XK_1,                      0)
 	TAGKEYS(                XK_2,                      1)
 	TAGKEYS(                XK_3,                      2)

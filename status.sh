@@ -1,12 +1,12 @@
 #!/bin/bash
 
 sep(){
-  echo -e "\u276c"
+  echo -e "\x01\u276c\x01"
 }
 
 intf(){
-  p1p1=$(ip -o -4 a | awk '/p1p1|wlan0|wlan1|ppp0/{s=s (s?" ":"") $4} END {printf "%s", s}')
-  echo -e "$p1p1$wlan0"
+  eth0=$(ip -o -4 a | awk '/eth0|wlan0/{s=s (s?" ":"") $4} END {printf "%s", s}')
+  echo -e "$eth0"
 }
 
 mem(){
@@ -14,13 +14,16 @@ mem(){
   echo -e "$mem""M"
 }
 
+temperature(){
+  t="$(cat /sys/class/thermal/thermal_zone0/temp)"
+  
+}
+
 cpu(){
-  read cpu a b c previdle rest < /proc/stat
-  prevtotal=$((a+b+c+previdle))
-  sleep 0.5
-  read cpu a b c idle rest < /proc/stat
-  total=$((a+b+c+idle))
-  cpu="$((100*( (total-prevtotal) - (idle-previdle) ) / (total-prevtotal) ))"
+  read lavg rest < /proc/loadavg
+  lavg=$(echo $lavg | tr -d .) 
+  echo $lavg > /dev/stderr
+  cpu=$(( lavg / 4 ))
   echo -e "$cpu%"
 }
 
@@ -33,11 +36,11 @@ bat(){
   onl="$(grep "on-line" <(acpi -V))"
 
   if [ -z "$onl" ] && [ "$ac" -gt "15" ]; then
-    echo -e "$ac%"
+    echo -e "\x04$ac%\x01"
   elif [ -z "$onl" ] && [ "$ac" -le "15" ]; then
-    echo -e "\u2047 $ac%"
+    echo -e "\x03\u2047 $ac%\x01"
   else
-    echo -e "\u03a6"
+    echo -e "\x01\u03a6\x01"
   fi
 }
 
@@ -46,4 +49,4 @@ dte(){
   echo -e "$dte"
 }
 
-xsetroot -name "$(cpu) $(sep) $(mem) $(sep) $(intf) $(sep) $(bat) $(sep) $(dte)"
+xsetroot -name "$(cpu) $(sep) $(mem) $(sep) $(intf) $(sep) $(bat) $(sep) $(dte) "
